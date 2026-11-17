@@ -1,1 +1,1 @@
-# -akaoni-compendium-updates
+# akaoni-compendium-updates
