@@ -371,7 +371,14 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   border:1px solid #b96583;border-left:4px solid #ec789a;border-radius:9px;
   background:#1c111e;box-shadow:0 10px 32px #000c;overflow-wrap:anywhere;
 }
-.session-result[hidden],.session-result strong[hidden]{display:none}
+.session-result[hidden],.session-result strong[hidden],.target-save[hidden]{display:none}
+.target-save{margin-top:11px;border-top:1px solid #724559;padding-top:10px}
+.target-save .inline{margin-top:7px}
+.target-save button[aria-pressed="true"]{border-color:#f185a7;background:#652841}
+.spell-roll{margin:14px 0}
+.spell-roll summary{cursor:pointer}
+.spell-roll form{margin-top:10px}
+.spell-roll-error{color:#ffc4db;min-height:0}
 .session-result h2,.roll-entry h4{margin:0;color:#ffdce9;font-size:16px}
 .session-result strong{display:block;font:700 42px/1.1 Georgia,serif;color:#fff3f5;margin:4px 0 5px}
 .session-result p,.roll-entry p{color:#e2c5d0;line-height:1.5}
@@ -437,7 +444,7 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   </label>
   <p class="note">Aggiungi i privilegi di classe nelle note.</p>
   <div class="inline"><button type="button" onclick="closeGenericLevel()">Annulla</button><button class="primary">Conferma livello</button></div>
-</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.4</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><button class="top-action" type="button" onclick="openCharacterHub()" aria-label="Personaggi" title="Personaggi">☷</button>
+</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.5</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><button class="top-action" type="button" onclick="openCharacterHub()" aria-label="Personaggi" title="Personaggi">☷</button>
 <button class="top-action" type="button" onclick="tab('dadi')">Dadi</button>
 <button class="top-action primary" type="button" onclick="roll('1d20',0,'d20 rapido')" aria-label="Lancia un d20" title="Lancia un d20">d20</button>
 <input id="import" type="file" accept=".json" hidden onchange="importData(event)"></header><aside class="side" id="leftSidebar">
@@ -508,6 +515,14 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 </aside><aside id="sessionResult" class="session-result" hidden>
   <div role="status" aria-atomic="true">
     <h2 id="resultTitle"></h2><strong id="resultTotal"></strong><p id="lastRoll"></p>
+  </div>
+  <div id="targetSave" class="target-save" hidden>
+    <p id="targetSavePrompt"></p>
+    <div class="inline">
+      <button id="saveFailed" type="button" aria-pressed="false" onclick="selectTargetSave(false)">TS fallito</button>
+      <button id="savePassed" type="button" aria-pressed="false" onclick="selectTargetSave(true)">TS superato</button>
+    </div>
+    <p class="note" id="targetSaveOutcome" role="status"></p>
   </div>
   <button class="session-result-close" type="button" aria-label="Chiudi risultato" onclick="closeSessionResult()">×</button>
 </aside></div>
@@ -733,8 +748,19 @@ function save(){if(window.webkit?.messageHandlers?.storage){window.webkit.messag
     console.error(error);
   }
 };
-try{const stored=localStorage.getItem('akaoni-v03');if(stored)state={...state,...JSON.parse(stored)}}catch(e){}function tab(name){const previous=document.querySelector('.section.show')?.id;document.querySelectorAll('.section').forEach(x=>x.classList.toggle('show',x.id===name));document.querySelectorAll('.topnav button[data-target]').forEach(x=>x.classList.toggle('active',x.dataset.target===name));const extra=document.getElementById('extraNav');if(extra)extra.value=['scheda','compendio','inventario','diario'].includes(name)?'':name;render(false);if(previous!==name){closeSessionResult();document.querySelector('.main').scrollTop=0}}const tabs=[['scheda','Scheda'],['combattimento','Azioni'],['poteri','Poteri latenti'],['mutageni','Mutageni'],['inventario','Equipaggiamento'],['compendio','Compendio'],['homebrew','Homebrew'],['diario','Diario'],['dadi','Dadi']];document.getElementById('tabs').innerHTML=tabs.map(([id,t])=>`<button data-tab="${id}" onclick="tab('${id}')">${t}</button>`).join('');function render(persist = true){document.getElementById('heroHP').textContent=state.hp+' / '+state.maxHP;document.getElementById('hpfill').style.width=(100*state.hp/Math.max(1,state.maxHP))+'%';document.getElementById('hpStat').textContent=state.hp+' / '+state.maxHP;document.getElementById('combatHP').textContent=state.hp+' / '+state.maxHP;document.getElementById('acStat').textContent=state.ac+(mutagenActive('Celerity')?1:0);document.getElementById('initStat').textContent=sign(abilityMod('DES'));document.getElementById('speedStat').textContent=dashSpeed()+' m';document.getElementById('stats').innerHTML=statNames.map(([k,v])=>`<div class="stat"><small>${k}</small><b>${ability(k)}</b><span>${sign(abilityMod(k))}</span></div>`).join('');document.getElementById('saves').innerHTML=statNames.map(([k,v])=>`<div class="skill"><span>${k}${['DES','INT'].includes(k)?' ✦':''}</span><b>${sign(abilityMod(k)+(['DES','INT'].includes(k)?proficiency():0)+((state.bloodLevel||3)>=10&&['FOR','DES','COS'].includes(k)?Math.max(1,abilityMod('INT')):0))}</b></div>`).join('');document.getElementById('skills').innerHTML=skills.map(([n,k,p])=>{const actual=(state.extraExpertise||[]).includes(n)?2:p;return `<div class="skill"><span>${actual===2?'✦':actual===1?'●':'○'} ${n}</span><b>${sign(abilityMod(k)+actual*proficiency())}</b></div>`}).join('');document.getElementById('passivePerceptionStat').textContent=passivePerception();document.getElementById('passivePerceptionHelp').textContent='10 + Percezione '+sign(passivePerception()-10)+' · vista in sole diretto: −5';renderDash();document.getElementById('riteBadge').textContent=state.rite?'Attivo: '+state.rite:'Non attivo';document.getElementById('curseState').textContent=Math.max(0,bloodCurseMax()-bloodCurseSpent())+' / '+bloodCurseMax();document.getElementById('curseSelect').innerHTML=knownCurses().map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');document.getElementById('latentCurrent').textContent=state.latent;document.getElementById('latentMax').value=state.latentMax;document.getElementById('lolthState').textContent=state.lolthUsed?'Recupero già utilizzato':'Recupero disponibile';document.getElementById('powerSummary').innerHTML=`<p class="note">Punti latenti: ${state.latent}/${state.latentMax}. Ultime volontà (1), Interruzzione della vita (2).</p>`;document.getElementById('preparedLabel').textContent=preparedMutagens().join(', ')||'Nessuno';document.getElementById('activeLabel').textContent=activeMutagens().join(', ')||'Nessuno';document.getElementById('mutagenCraftStatus').textContent='Preparazioni residue: '+remainingMutagenPreparations()+' / '+mutagenSlots();document.getElementById('mutagenCards').innerHTML=knownMutagens().map(n=>{const d=(mutagens.find(x=>x[0]===n)||[])[1]||'Formula aggiunta al nuovo livello: consulta gli effetti specifici concordati con il Master.';return `<div class="item"><b>${esc(n)}</b><p>${esc(d)}</p><div class="actions"><button onclick="prepareMutagen(decodeURIComponent('${encodeURIComponent(n)}'))" ${remainingMutagenPreparations()<=0||preparedMutagens().includes(n)||activeMutagens().includes(n)?'disabled':''}>Prepara</button><button onclick="drinkMutagen(decodeURIComponent('${encodeURIComponent(n)}'))" ${!preparedMutagens().includes(n)?'disabled':''}>Consuma</button></div></div>`}).join('');document.getElementById('inventoryList').innerHTML=state.inventory.map((x,i)=>`<div class="item inventory-entry"><div class="item-art">${artIcon(x.name)}</div><div class="inventory-copy"><b>${esc(x.name)}</b> <span class="tag">×${Number(x.qty)||0}</span> ${x.equipped?'<span class="tag green">Equipaggiato</span>':''}<p>${esc(x.desc||'')}</p><div class="actions"><button onclick="changeQty(${i},-1)">−</button><button onclick="changeQty(${i},1)">+</button><button onclick="toggleEquip(${i})">${x.equipped?'Rimuovi':'Equipaggia'}</button><button onclick="deleteItem(${i})">Elimina</button></div></div></div>`).join('');document.getElementById('equipmentShort').innerHTML=state.inventory.filter(x=>x.equipped).map(x=>`<div class="skill">${esc(x.name)} <small>×${x.qty}</small></div>`).join('');['gold','silver','karadash'].forEach(k=>document.getElementById(k).value=state[k]);document.getElementById('journal').value=state.journal;document.getElementById('hbList').innerHTML=state.homebrew.map((x,i)=>`<div class="item"><b>${esc(x.name)}</b> <span class="tag">${esc(x.type)}</span><p>${esc(x.desc)}</p><button onclick="deleteHomebrew(${i})">Elimina</button></div>`).join('');document.getElementById('combatLog').innerHTML=state.log.slice(0,25).map(x=>`<div class="skill">${esc(x)}</div>`).join('');renderRollHistory();document.getElementById('diceHistory').innerHTML=state.log.slice(0,20).map(x=>`<div class="skill">${esc(x)}</div>`).join('');renderComp(document.getElementById('compSearch').value);renderSideComp('');renderExtended();renderProgress();renderQuickSidebar();paintAttackIcons();renderDrowTraits();refreshPortrait();if(persist)save()}function closeSessionResult(){
+try{const stored=localStorage.getItem('akaoni-v03');if(stored)state={...state,...JSON.parse(stored)}}catch(e){}function tab(name){const previous=document.querySelector('.section.show')?.id;document.querySelectorAll('.section').forEach(x=>x.classList.toggle('show',x.id===name));document.querySelectorAll('.topnav button[data-target]').forEach(x=>x.classList.toggle('active',x.dataset.target===name));const extra=document.getElementById('extraNav');if(extra)extra.value=['scheda','compendio','inventario','diario'].includes(name)?'':name;render(false);if(previous!==name){closeSessionResult();document.querySelector('.main').scrollTop=0}}const tabs=[['scheda','Scheda'],['combattimento','Azioni'],['poteri','Poteri latenti'],['mutageni','Mutageni'],['inventario','Equipaggiamento'],['compendio','Compendio'],['homebrew','Homebrew'],['diario','Diario'],['dadi','Dadi']];document.getElementById('tabs').innerHTML=tabs.map(([id,t])=>`<button data-tab="${id}" onclick="tab('${id}')">${t}</button>`).join('');function render(persist = true){document.getElementById('heroHP').textContent=state.hp+' / '+state.maxHP;document.getElementById('hpfill').style.width=(100*state.hp/Math.max(1,state.maxHP))+'%';document.getElementById('hpStat').textContent=state.hp+' / '+state.maxHP;document.getElementById('combatHP').textContent=state.hp+' / '+state.maxHP;document.getElementById('acStat').textContent=state.ac+(mutagenActive('Celerity')?1:0);document.getElementById('initStat').textContent=sign(abilityMod('DES'));document.getElementById('speedStat').textContent=dashSpeed()+' m';document.getElementById('stats').innerHTML=statNames.map(([k,v])=>`<div class="stat"><small>${k}</small><b>${ability(k)}</b><span>${sign(abilityMod(k))}</span></div>`).join('');document.getElementById('saves').innerHTML=statNames.map(([k,v])=>`<div class="skill"><span>${k}${['DES','INT'].includes(k)?' ✦':''}</span><b>${sign(abilityMod(k)+(['DES','INT'].includes(k)?proficiency():0)+((state.bloodLevel||3)>=10&&['FOR','DES','COS'].includes(k)?Math.max(1,abilityMod('INT')):0))}</b></div>`).join('');document.getElementById('skills').innerHTML=skills.map(([n,k,p])=>{const actual=(state.extraExpertise||[]).includes(n)?2:p;return `<div class="skill"><span>${actual===2?'✦':actual===1?'●':'○'} ${n}</span><b>${sign(abilityMod(k)+actual*proficiency())}</b></div>`}).join('');document.getElementById('passivePerceptionStat').textContent=passivePerception();document.getElementById('passivePerceptionHelp').textContent='10 + Percezione '+sign(passivePerception()-10)+' · vista in sole diretto: −5';renderDash();document.getElementById('riteBadge').textContent=state.rite?'Attivo: '+state.rite:'Non attivo';document.getElementById('curseState').textContent=Math.max(0,bloodCurseMax()-bloodCurseSpent())+' / '+bloodCurseMax();document.getElementById('curseSelect').innerHTML=knownCurses().map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');document.getElementById('latentCurrent').textContent=state.latent;document.getElementById('latentMax').value=state.latentMax;document.getElementById('lolthState').textContent=state.lolthUsed?'Recupero già utilizzato':'Recupero disponibile';document.getElementById('powerSummary').innerHTML=`<p class="note">Punti latenti: ${state.latent}/${state.latentMax}. Ultime volontà (1), Interruzzione della vita (2).</p>`;document.getElementById('preparedLabel').textContent=preparedMutagens().join(', ')||'Nessuno';document.getElementById('activeLabel').textContent=activeMutagens().join(', ')||'Nessuno';document.getElementById('mutagenCraftStatus').textContent='Preparazioni residue: '+remainingMutagenPreparations()+' / '+mutagenSlots();document.getElementById('mutagenCards').innerHTML=knownMutagens().map(n=>{const d=(mutagens.find(x=>x[0]===n)||[])[1]||'Formula aggiunta al nuovo livello: consulta gli effetti specifici concordati con il Master.';return `<div class="item"><b>${esc(n)}</b><p>${esc(d)}</p><div class="actions"><button onclick="prepareMutagen(decodeURIComponent('${encodeURIComponent(n)}'))" ${remainingMutagenPreparations()<=0||preparedMutagens().includes(n)||activeMutagens().includes(n)?'disabled':''}>Prepara</button><button onclick="drinkMutagen(decodeURIComponent('${encodeURIComponent(n)}'))" ${!preparedMutagens().includes(n)?'disabled':''}>Consuma</button></div></div>`}).join('');document.getElementById('inventoryList').innerHTML=state.inventory.map((x,i)=>`<div class="item inventory-entry"><div class="item-art">${artIcon(x.name)}</div><div class="inventory-copy"><b>${esc(x.name)}</b> <span class="tag">×${Number(x.qty)||0}</span> ${x.equipped?'<span class="tag green">Equipaggiato</span>':''}<p>${esc(x.desc||'')}</p><div class="actions"><button onclick="changeQty(${i},-1)">−</button><button onclick="changeQty(${i},1)">+</button><button onclick="toggleEquip(${i})">${x.equipped?'Rimuovi':'Equipaggia'}</button><button onclick="deleteItem(${i})">Elimina</button></div></div></div>`).join('');document.getElementById('equipmentShort').innerHTML=state.inventory.filter(x=>x.equipped).map(x=>`<div class="skill">${esc(x.name)} <small>×${x.qty}</small></div>`).join('');['gold','silver','karadash'].forEach(k=>document.getElementById(k).value=state[k]);document.getElementById('journal').value=state.journal;document.getElementById('hbList').innerHTML=state.homebrew.map((x,i)=>`<div class="item"><b>${esc(x.name)}</b> <span class="tag">${esc(x.type)}</span><p>${esc(x.desc)}</p><button onclick="deleteHomebrew(${i})">Elimina</button></div>`).join('');document.getElementById('combatLog').innerHTML=state.log.slice(0,25).map(x=>`<div class="skill">${esc(x)}</div>`).join('');renderRollHistory();document.getElementById('diceHistory').innerHTML=state.log.slice(0,20).map(x=>`<div class="skill">${esc(x)}</div>`).join('');renderComp(document.getElementById('compSearch').value);renderSideComp('');renderExtended();renderProgress();renderQuickSidebar();paintAttackIcons();renderDrowTraits();refreshPortrait();if(persist)save()}let activeTargetSave;
+function closeSessionResult(){
   document.getElementById("sessionResult").hidden = true;
+  activeTargetSave = undefined;
+}
+function selectTargetSave(passed){
+  if (!activeTargetSave) return;
+  const damage = passed ? activeTargetSave.successDamage : activeTargetSave.fullDamage;
+  const outcome = passed ? "TS superato" : "TS fallito";
+  document.getElementById("saveFailed").setAttribute("aria-pressed", String(!passed));
+  document.getElementById("savePassed").setAttribute("aria-pressed", String(passed));
+  document.getElementById("resultTotal").textContent = damage;
+  document.getElementById("targetSaveOutcome").textContent = outcome + " · " + damage + " danni a questo bersaglio.";
 }
 function showSessionResult(message, result){
   document.getElementById("sessionResult").hidden = false;
@@ -743,6 +769,19 @@ function showSessionResult(message, result){
   total.hidden = !result;
   total.textContent = result?.total ?? "";
   document.getElementById("lastRoll").textContent = result?.detail || message;
+  activeTargetSave = result?.targetSave;
+  document.getElementById("targetSave").hidden = !activeTargetSave;
+  document.getElementById("targetSaveOutcome").textContent = "";
+  if (activeTargetSave) {
+    const {ability,fullDamage,successDamage} = activeTargetSave;
+    document.getElementById("targetSavePrompt").textContent = (ability ? "TS " + ability + " · " : "") +
+      "Scegli l’esito comunicato dal Master per il bersaglio.";
+    for (const [id,label,damage] of [["saveFailed","TS fallito",fullDamage],["savePassed","TS superato",successDamage]]) {
+      const button = document.getElementById(id);
+      button.textContent = label + " · " + damage;
+      button.setAttribute("aria-pressed", "false");
+    }
+  }
 }
 function renderRollHistory(){
   const rolls = Array.isArray(state.recentRolls) ? state.recentRolls : [];
@@ -800,9 +839,7 @@ record(state.riteType + " su " + w + ": " + cost + " · " + detail, {label:state
   const detail = "Dado Emocraft d" + hemocraftSides() + " · PF rimasti: " + state.hp;
   record(name + " amplificata: costo " + cost + " PF · " + detail, {label:name + " · Costo in PF",total:cost,detail});
 } else record(name + " usata");}function setLatent(n){state.latent=Math.max(0,Math.min(state.latentMax,state.latent+n));render()}function updateLatentMax(v){state.latentMax=Math.max(0,Number(v)||0);state.latent=Math.min(state.latent,state.latentMax);render()}function resetLatent(){state.latent=state.latentMax;record('Nuova sessione: punti latenti ripristinati')}function usePower(cost,name){if(state.latent<cost){alert('Punti latenti insufficienti. Imposta prima il totale concesso dal Master.');return}state.latent-=cost;if(cost===2){
-  const values = dice(6,6), total = values.reduce((sum,value) => sum + value, 0);
-  const detail = "6d6 necrotici · dadi " + values.join(", ") + " · TS COS riuscito: " + Math.floor(total/2) + " danni · 2 punti Letum";
-  record(`${name}: ${total} danni · ${detail}`, {label:name + " · Danni",total,detail});
+  rollSaveDamage(name, "Costituzione", "half", [{count:6,sides:6}], 0, "2 punti Letum");
 }else record(`${name}: costo 1 punto; domanda allo spirito (possibile incontro con Letum)`)}function useLolth(){if(state.lolthUsed){alert('Già utilizzato. Disponibile dopo riposo lungo.');return}if(state.hp!==0){alert('Il Marchio di Lolth si attiva quando scendi a 0 PF. Usa questa funzione soltanto quando la condizione è soddisfatta.')}state.hp=1;state.lolthUsed=true;record('Marchio di Lolth: recuperi 1 PF (1/riposo lungo)')}function prepareMutagen(n){if(!knownMutagens().includes(n))return;const prepared=preparedMutagens();if(prepared.includes(n)||activeMutagens().includes(n)){alert('Formula già preparata o attiva.');return}if(remainingMutagenPreparations()<=0){alert('Preparazioni esaurite: potrai preparare nuovi mutageni soltanto dopo un riposo lungo.');return}state.mutagensCraftedSinceLongRest=mutagensCraftedSinceLongRest()+1;state.preparedMutagens=prepared.concat(n);state.prepared=state.preparedMutagens[0]||'';record('Mutageno preparato: '+n+' · preparazioni residue '+remainingMutagenPreparations()+'/'+mutagenSlots())}
 function drinkMutagen(n){const prepared=preparedMutagens();if(!prepared.includes(n))return;state.preparedMutagens=prepared.filter(x=>x!==n);state.activeMutagens=activeMutagens().concat(n);state.prepared=state.preparedMutagens[0]||'';state.mutagen=state.activeMutagens[0]||'';record('Mutageno consumato: '+n+'; effetti e svantaggi attivi')}
 function clearMutagen(){state.activeMutagens=[];state.mutagen='';record('Mutageni espulsi (azione)')}
@@ -1051,7 +1088,78 @@ if(type==='homebrew'){const v=(state.homebrew||[])[Number(index)];if(v)return sh
 return openSRDDetail(type,index)}
 function spellSummary(s){return '<div class="codex-meta"><span>Livello '+(s.level===0?'Trucchetto':s.level)+'</span><span>'+esc(s.school||'Scuola SRD')+'</span><span>Gittata: '+esc(s.range||'Vedi fonte')+'</span><span>Tempo: '+esc(s.time||'Vedi fonte')+'</span><span>Durata: '+esc(s.duration||'Vedi fonte')+'</span><span>Componenti: '+esc(s.components||'Vedi fonte')+'</span></div>'}
 function localSpellSheet(spell){return '<div class="codex-kicker">INCANTESIMO · 5E 2014 · SRD</div><h2>'+esc(spell.name)+'</h2><p class="codex-subtitle">'+esc(spell.alias||'')+'</p>'+spellSummary(spell)+'<h3>Effetto</h3><div class="codex-text"><p>'+esc(spell.desc||'')+'</p></div>'+(spell.damage?'<div class="codex-note"><strong>Danni:</strong> '+esc(spell.damage)+'</div>':'')+'<div class="codex-note">Scheda riassuntiva offline. Per il testo SRD completo è disponibile il caricamento online. <a href="https://www.dnd5eapi.co/api/2014/spells/'+encodeURIComponent(spell.index)+'" target="_blank" rel="noopener">Fonte SRD 2014 ↗</a></div>'}
-async function openSpell(index){const base=offlineSRD.find(x=>x.type==='spell'&&x.index===index),d=italianSRD.spells||{},t=k=>d[index+'.'+k]||'';if(!base)return showCompDetail('<h2>'+esc(index)+'</h2><p class="codex-note">Incantesimo non incluso nello SRD 2014 offline.</p>');const f=base.full||{},meta={level:base.level,school:schoolIt(f.school||base.school),range:t('range')||'—',time:t('castingTime')||'—',duration:t('duration')||'—',components:(f.components||[]).join(', ')+(t('material')?' ('+t('material')+')':'')};showCompDetail('<div class="codex-kicker">INCANTESIMO · SRD 5.1 · ITALIANO OFFLINE</div><h2>'+esc(t('name')||base.name)+'</h2><p class="codex-subtitle">'+esc(base.name)+'</p>'+spellSummary(meta)+'<h3>Descrizione</h3><div class="codex-text">'+(t('desc')?formatItText(t('desc')):'<p>Descrizione italiana non disponibile.</p>')+(t('higherLevel')?'<h3>Ai livelli superiori</h3>'+formatItText(t('higherLevel')):'')+'</div><div class="codex-legal">Traduzione italiana dello SRD 5.1 di Wizards of the Coast · CC BY 4.0. <a href="'+esc(itemItSource(index))+'" target="_blank" rel="noopener">Apri fonte italiana ↗</a></div>')}
+/* Presets use the base dice from the offline SRD 5.1. Adjust the formula for higher levels. */
+const saveSpellPresets = {
+  "acid-splash":["Destrezza","none","1d6"],
+  "blight":["Costituzione","half","8d8"],
+  "burning-hands":["Destrezza","half","3d6"],
+  "chain-lightning":["Destrezza","half","10d8"],
+  "cone-of-cold":["Costituzione","half","8d8"],
+  "disintegrate":["Destrezza","none","10d6+40"],
+  "finger-of-death":["Costituzione","half","7d8+30"],
+  "fire-storm":["Destrezza","half","7d10"],
+  "fireball":["Destrezza","half","8d6"],
+  "lightning-bolt":["Destrezza","half","8d6"],
+  "poison-spray":["Costituzione","none","1d12"],
+  "sacred-flame":["Destrezza","none","1d8"],
+  "shatter":["Costituzione","half","3d8"],
+  "thunderwave":["Costituzione","half","2d8"],
+  "vicious-mockery":["Saggezza","none","1d4"]
+};
+function rollSaveDamage(name,ability,success,terms,bonus=0,note=""){
+  const rolled = terms.map(({count,sides}) => ({count,sides,values:dice(count,sides)}));
+  const baseTotal = rolled.reduce((total, term) => total + term.values.reduce((a,b) => a+b, 0), bonus);
+  const total = Math.max(0,baseTotal);
+  const successDamage = success === "half" ? Math.floor(total / 2) : 0;
+  const detail = rolled.map(({count,sides,values}) => count + "d" + sides + ": " + values.join(", ")).join(" · ") +
+    (bonus ? " · Modificatore " + sign(bonus) : "") +
+    " · TS " + (ability ? ability + " " : "") + "fallito: " + total +
+    " · TS superato: " + successDamage + " danni" + (note ? " · " + note : "");
+  const targetSave = {ability,fullDamage:total,successDamage};
+  record(name + ": " + detail, {label:name + " · Danni",total,detail,targetSave});
+}
+function spellSavePanel(spell,name){
+  if (spell.index === "faerie-fire") {
+    return '<p class="codex-note"><strong>TS Destrezza del bersaglio.</strong> Il Master stabilisce chi viene illuminato. La magia non infligge danni.</p>';
+  }
+  const preset = saveSpellPresets[spell.index];
+  const description = spell.full?.desc?.join(" ") || "";
+  if (!preset && !(/\bdamage\b/i.test(description) && /saving throw|failed save|successful save/i.test(description))) return "";
+  const [ability,success,formula] = preset || ["","",""];
+  const form = '<form data-spell-name="'+esc(name)+'" data-save-ability="'+esc(ability)+'" onsubmit="submitSaveSpell(event)">' +
+    (ability ? '<p class="note">TS '+esc(ability)+' del bersaglio. Adegua i dadi al livello o allo slot utilizzato.</p>' :
+      '<p class="note">Per gli incantesimi con danni e TS, inserisci i dadi e l’effetto del successo indicati nella descrizione.</p>') +
+    '<div class="inline dice-options"><label>Dadi (es. 8d6)<input name="damage" value="'+esc(formula)+'" maxlength="32" required></label>' +
+    '<label>Se il TS è superato<select name="success" required><option value="">Scegli</option>' +
+    '<option value="half"'+(success==="half"?" selected":"")+'>Metà danni</option>' +
+    '<option value="none"'+(success==="none"?" selected":"")+'>Nessun danno</option></select></label>' +
+    '<button class="primary">Tira danni</button></div><p class="spell-roll-error" role="alert"></p></form>';
+  return preset ? '<div class="panel spell-roll">'+form+'</div>' :
+    '<details class="panel spell-roll"><summary>Calcola danni con tiro salvezza</summary>'+form+'</details>';
+}
+function submitSaveSpell(event){
+  event.preventDefault();
+  const form = event.currentTarget;
+  const expr = form.elements.damage.value.toLowerCase().replace(/\s+/g,"");
+  const success = form.elements.success.value;
+  const error = form.querySelector(".spell-roll-error");
+  const match = /^(\d{1,3}d(?:100|20|12|10|8|6|4)(?:\+\d{1,3}d(?:100|20|12|10|8|6|4))*)([+-]\d{1,3})?$/.exec(expr);
+  if (!match || !["half","none"].includes(success)) {
+    error.textContent = "Indica i dadi, per esempio 8d6 o 2d8+4d6+2, e l’effetto del TS superato.";
+    return;
+  }
+  const terms = match[1].split("+").map(term => {
+    const [count,sides] = term.split("d").map(Number);
+    return {count,sides};
+  });
+  if (terms.some(term => term.count < 1) || terms.reduce((total,term) => total+term.count,0) > 100) {
+    error.textContent = "Inserisci da 1 a 100 dadi in totale.";
+    return;
+  }
+  error.textContent = "";
+  rollSaveDamage(form.dataset.spellName,form.dataset.saveAbility,success,terms,Number(match[2] || 0));
+}
+async function openSpell(index){const base=offlineSRD.find(x=>x.type==='spell'&&x.index===index),d=italianSRD.spells||{},t=k=>d[index+'.'+k]||'';if(!base)return showCompDetail('<h2>'+esc(index)+'</h2><p class="codex-note">Incantesimo non incluso nello SRD 2014 offline.</p>');const f=base.full||{},meta={level:base.level,school:schoolIt(f.school||base.school),range:t('range')||'—',time:t('castingTime')||'—',duration:t('duration')||'—',components:(f.components||[]).join(', ')+(t('material')?' ('+t('material')+')':'')};showCompDetail('<div class="codex-kicker">INCANTESIMO · SRD 5.1 · ITALIANO OFFLINE</div><h2>'+esc(t('name')||base.name)+'</h2><p class="codex-subtitle">'+esc(base.name)+'</p>'+spellSummary(meta)+spellSavePanel(base,t('name')||base.name)+'<h3>Descrizione</h3><div class="codex-text">'+(t('desc')?formatItText(t('desc')):'<p>Descrizione italiana non disponibile.</p>')+(t('higherLevel')?'<h3>Ai livelli superiori</h3>'+formatItText(t('higherLevel')):'')+'</div><div class="codex-legal">Traduzione italiana dello SRD 5.1 di Wizards of the Coast · CC BY 4.0. <a href="'+esc(itemItSource(index))+'" target="_blank" rel="noopener">Apri fonte italiana ↗</a></div>')}
 async function fetchCodexItem(endpoint,index){if(typeof fetch!=='function')throw Error('fetch non supportato');const valid=endpoint.replace(/[^a-z-]/g,''),ix=index.replace(/[^a-z0-9-]/g,'');const response=await fetch('https://www.dnd5eapi.co/api/2014/'+valid+'/'+ix,{mode:'cors',headers:{Accept:'application/json'}});if(!response.ok)throw Error('SRD '+response.status);return response.json()}
 function codexStatus(msg){const el=document.getElementById('compStatus');if(el)el.textContent=msg}
 async function loadSRDCatalog(){if(codexLoading)return;codexLoadAttempted=true;codexLoading=true;codexStatus('Caricamento dell’indice SRD 2014…');let remote=[];
@@ -1166,7 +1274,7 @@ function openCurrentPortraitWindow(){const modal=document.getElementById('portra
 
 
 function renderDrowTraits(){const f=document.getElementById('drowFaerieBtn'),d=document.getElementById('drowDarknessBtn');if(!f||!d)return;document.getElementById('drowSpellDC').textContent=8+proficiency()+abilityMod('CAR');for(const [btn,level,used] of [[f,3,!!state.drowFaerieFireUsed],[d,5,!!state.drowDarknessUsed]]){btn.disabled=totalLevel()<level||used;btn.textContent=totalLevel()<level?'Dal livello '+level:used?'Usato · riposo lungo':'Usa'}}
-function useDrowMagic(which){const k=which==='faerieFire'?'drowFaerieFireUsed':'drowDarknessUsed',level=which==='faerieFire'?3:5,name=which==='faerieFire'?'Luminescenza':'Oscurità';if(totalLevel()<level)return alert('Disponibile dal livello '+level);if(state[k])return alert(name+' è già stato utilizzato: riposo lungo necessario.');state[k]=true;record('Magia razziale Drow: '+name+' · CD '+(8+proficiency()+abilityMod('CAR'))+' · riposo lungo per recuperare')}
+function useDrowMagic(which){const k=which==='faerieFire'?'drowFaerieFireUsed':'drowDarknessUsed',level=which==='faerieFire'?3:5,name=which==='faerieFire'?'Luminescenza':'Oscurità';if(totalLevel()<level)return alert('Disponibile dal livello '+level);if(state[k])return alert(name+' è già stato utilizzato: riposo lungo necessario.');state[k]=true;record('Magia razziale Drow: '+name+(which==='faerieFire'?' · TS Destrezza dei bersagli (esito del Master), CD '+(8+proficiency()+abilityMod('CAR'))+' · nessun danno':'')+' · riposo lungo per recuperare')}
 function openDrowSheet(){const rows=[['Incrementi caratteristiche','Destrezza +2 e Carisma +1 sono già compresi nei punteggi di Akaoni. Non vengono ricalcolati.'],['Scurovisione superiore','36 metri (120 piedi). Al buio percepisci sfumature di grigio.'],['Sensibilità alla luce solare','Svantaggio agli attacchi e alle prove di Saggezza (Percezione) basate sulla vista quando tu, il bersaglio o ciò che osservi è sotto luce solare diretta.'],['Sensi acuti','Competenza in Percezione, già conteggiata nella scheda.'],['Retaggio fatato','Vantaggio ai TS per evitare di essere affascinato; la magia non ti può addormentare.'],['Trance','4 ore di meditazione profonda in luogo del sonno.'],['Addestramento nelle armi Drow','Competenza con stocco, spada corta e balestra a mano.'],['Lingue e velocità','Comune, Elfico e Sottocomune. Velocità base 9 m.'],['Magia Drow','Luci Danzanti a volontà. Luminescenza una volta per riposo lungo dal livello 3. Oscurità una volta per riposo lungo dal livello 5. Carisma è la caratteristica da incantatore.']];showCompDetail('<div class="codex-kicker">RAZZA GIOCABILE · D&D 2014</div><h2>Drow · Elfo Oscuro</h2><p class="codex-subtitle">Tratti razziali elfici e sottorazza Drow del Manuale del Giocatore (2014)</p><div class="codex-meta"><span>Taglia Media</span><span>Velocità 9 m</span><span>Scurovisione 36 m</span><span>CD incantesimi razziali '+(8+proficiency()+abilityMod('CAR'))+'</span></div><div class="codex-features">'+rows.map(([name,desc])=>'<div class="codex-feature"><strong>'+esc(name)+'</strong><p>'+esc(desc)+'</p></div>').join('')+'</div><p class="codex-legal"><a href="https://dnd5e.wikidot.com/lineage:elf-drow" target="_blank" rel="noopener">Fonte delle regole 2014 ↗</a></p>')}
 document.getElementById('levelModal').addEventListener('input',clearLevelReview);document.getElementById('levelModal').addEventListener('change',clearLevelReview);restoreLayout();render(false);openCharacterHub();
 document.addEventListener("keydown", event => {
