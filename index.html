@@ -305,17 +305,22 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 .side-hero-motif span{font-size:80px;top:0}
 .hero{
   height:auto;min-height:240px;display:grid;
-  grid-template-columns:minmax(115px,26%) minmax(0,1fr);
+  grid-template-columns:minmax(135px,min(34%,320px)) minmax(0,1fr);
   align-items:center;gap:clamp(12px,2vw,32px);padding:20px clamp(15px,3vw,40px);
   background:linear-gradient(90deg,#140a151f,#0c081447),var(--art-banner-gothic) left center/cover no-repeat;
 }
 .hero::before,.hero::after{display:none}
 .hero .portrait{
-  position:relative;align-self:center;width:100%;height:clamp(150px,19vw,225px);
-  border-radius:9px;border:1px solid #aa536d;overflow:hidden;
-  background-color:#22111d;background-size:cover;background-position:center 22%;
+  position:relative;align-self:center;width:100%;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:6px;
+  border-radius:9px;border:1px solid #aa536d;overflow:hidden;background:#160d16;
   -webkit-mask-image:none;mask-image:none;
 }
+.hero .portrait:hover{border-color:#ff839a}
+.portrait img{
+  display:block;width:100%;height:clamp(175px,25vw,315px);
+  object-fit:contain;object-position:center;
+}
+.hero .portrait-hint{position:static;justify-self:center}
 .hero-text{min-width:0;padding:0;overflow-wrap:anywhere}
 .hero-text h1{font-size:clamp(29px,3.5vw,52px);line-height:1.12;margin:0 0 5px}
 .hero-text .subtitle{font-size:clamp(14px,1.5vw,19px)}
@@ -332,7 +337,8 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 .grid2>*,.grid3>*,.dash-bottom>*{min-width:0}
 @container akaoni-workspace (max-width:510px){
   .hero{grid-template-columns:minmax(0,1fr);gap:12px;padding:16px}
-  .hero .portrait{width:min(140px,100%);height:148px}
+  .hero .portrait{width:min(280px,100%);justify-self:center}
+  .portrait img{height:clamp(164px,60cqw,278px)}
   .grid3,.grid2{grid-template-columns:minmax(0,1fr)}
 }
 @supports not (container-type:inline-size){
@@ -391,13 +397,13 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   </label>
   <p class="note">Aggiungi i privilegi di classe nelle note.</p>
   <div class="inline"><button type="button" onclick="closeGenericLevel()">Annulla</button><button class="primary">Conferma livello</button></div>
-</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.1</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><input id="import" type="file" accept=".json" hidden onchange="importData(event)"></header><aside class="side" id="leftSidebar">
+</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.2</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><input id="import" type="file" accept=".json" hidden onchange="importData(event)"></header><aside class="side" id="leftSidebar">
 <h3>✥ Personaggio</h3><button class="primary" onclick="openCharacterHub()">☷ I miei personaggi</button><div class="char-chip"><span class="char-mini-art" role="button" tabindex="0" aria-label="Apri la galleria di Akaoni" onclick="openPortraitGallery()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPortraitGallery()}" title="Apri ritratti"></span><div class="char-mini-copy"><b>Akaoni Jorugumo</b><br><span class="muted" id="sideLevel">Liv. 7 · Ladro 4 / Blood Hunter 3</span></div></div>
 <button class="primary side-primary" onclick="openLevel()">✦ Sali di livello</button>
 <details class="sidebar-group"><summary>⚔ Strumenti di sessione</summary><div class="sidebar-group-items"><button onclick="tab('combattimento')">Combattimento e riposi</button><button onclick="tab('poteri')">Poteri di Letum</button><button onclick="tab('mutageni')">Gestione mutageni</button><button onclick="tab('dadi')">Lancia dadi</button></div></details>
 <details class="sidebar-group"><summary>⚙ Impostazioni e backup</summary><div class="sidebar-group-items"><button onclick="openEdit()">Modifica PF e statistiche</button><button onclick="openPortraitGallery()">Apri galleria ritratti</button><button onclick="tab('homebrew')">Editor Homebrew</button><button onclick="exportData()">Esporta personaggio JSON</button><button onclick="document.getElementById('import').click()">Importa personaggio JSON</button></div></details>
 <div class="side-bottom-art"><div class="moon-glow">✦</div><span>AKAONI · LAMA DI LOLTH</span></div><p class="note" style="padding:15px 8px">D&D 5e 2014 · Offline<br>Salvataggio automatico</p>
-</aside><main class="main"><div class="hero"><div class="portrait" role="button" tabindex="0" aria-label="Apri la galleria immagini di Akaoni" title="Clicca per aprire il ritratto" onclick="openPortraitGallery()" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();openPortraitGallery()}"><span class="portrait-hint">↗ Apri ritratto</span></div><div class="hero-text"><h1>Akaoni Jorugumo</h1><div class="subtitle">Lama di Lolth · Traghettatore di Letum</div><div class="meta"><div>Razza<strong><button type="button" class="hero-class-link" onclick="openDrowSheet()">Drow · Elfo Oscuro</button></strong></div><div>Classi<strong id="heroClasses">Ladro (Fantasma) 4<br>Blood Hunter (Mutante) 3</strong></div><div>Livello<strong id="heroLevel">7</strong></div><div>Background<strong>Velari di Lolth</strong></div><div>Punti Ferita<strong id="heroHP">48 / 48</strong><div class="hpbar"><div id="hpfill" style="width:100%"></div></div></div></div></div></div><nav class="tabs" id="tabs" hidden aria-hidden="true"></nav><section id="scheda" class="section show"><div class="session-dash"><div class="dash-header"><h2>◈ Dashboard di sessione</h2><div><button onclick="openHP()">♡ Gestisci PF</button><button onclick="openLevel()">✦ Livello</button><button onclick="tab('combattimento')">⚔ Riposi</button></div></div><div class="dash-tiles">
+</aside><main class="main"><div class="hero"><button class="portrait" type="button" aria-label="Apri la galleria immagini di Akaoni" onclick="openPortraitGallery()"><img id="heroPortrait" alt=""><span class="portrait-hint">↗ Apri ritratto</span></button><div class="hero-text"><h1>Akaoni Jorugumo</h1><div class="subtitle">Lama di Lolth · Traghettatore di Letum</div><div class="meta"><div>Razza<strong><button type="button" class="hero-class-link" onclick="openDrowSheet()">Drow · Elfo Oscuro</button></strong></div><div>Classi<strong id="heroClasses">Ladro (Fantasma) 4<br>Blood Hunter (Mutante) 3</strong></div><div>Livello<strong id="heroLevel">7</strong></div><div>Background<strong>Velari di Lolth</strong></div><div>Punti Ferita<strong id="heroHP">48 / 48</strong><div class="hpbar"><div id="hpfill" style="width:100%"></div></div></div></div></div></div><nav class="tabs" id="tabs" hidden aria-hidden="true"></nav><section id="scheda" class="section show"><div class="session-dash"><div class="dash-header"><h2>◈ Dashboard di sessione</h2><div><button onclick="openHP()">♡ Gestisci PF</button><button onclick="openLevel()">✦ Livello</button><button onclick="tab('combattimento')">⚔ Riposi</button></div></div><div class="dash-tiles">
 <div><small>PF</small><strong id="dashHP">—</strong><span id="dashTemp">Temporanei</span></div>
 <div><small>CA</small><strong id="dashAC">—</strong></div>
 <div><small>Iniziativa</small><strong id="dashInit">—</strong></div>
@@ -938,17 +944,21 @@ function activePortraitKey(){return portraitVariantInfo[state.activePortrait]?st
 function portraitURL(key){return state.portraitImages?.[key]||portraitVariantInfo[key]?.src||portraitVariantInfo.original.src}
 let currentHeroPortrait;
 function refreshPortrait(){
-  const key = activePortraitKey();
-  const url = portraitURL(key);
-  const hero = document.querySelector(".portrait");
+  const original = portraitURL("original");
+  const sources = [...new Set([portraitURL(activePortraitKey()), original, AKAONI_MINI_PORTRAIT])];
+  const hero = document.getElementById("heroPortrait");
   document.querySelector(".char-mini-art").style.backgroundImage = 'url("' + AKAONI_MINI_PORTRAIT + '")';
-  if (url !== currentHeroPortrait) {
-    currentHeroPortrait = url;
-    hero.style.backgroundImage = 'url("' + url + '"), url("' + AKAONI_MINI_PORTRAIT + '")';
-    if (key !== "original" && !state.portraitImages?.[key]) {
-      hero.style.backgroundImage = 'url("' + url + '"), url("' + portraitVariantInfo.original.src +
-        '"), url("' + AKAONI_MINI_PORTRAIT + '")';
-    }
+  if (sources.length !== currentHeroPortrait?.length || sources.some((src, i) => src !== currentHeroPortrait[i])) {
+    currentHeroPortrait = sources;
+    let next = 1;
+    hero.onerror = () => {
+      if (next === sources.length) {
+        hero.onerror = null;
+        return;
+      }
+      hero.src = sources[next++];
+    };
+    hero.src = sources[0];
   }
   if (document.getElementById("portraitModal").classList.contains("open")) renderPortraitGallery();
 }
