@@ -292,7 +292,6 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 }
 /* Keep the three scrolling panes inside the middle grid row. */
 .app{position:relative;display:grid;height:100%;max-height:none;grid-template-rows:auto minmax(0,1fr)}
-.top{min-height:60px}
 .main,.side,.right{min-height:0;align-self:stretch;overflow-y:auto;overscroll-behavior-y:contain}
 .main{min-width:0;overflow-x:hidden}
 .side,.right{display:block;background-color:#100b14;background-position:center top;background-size:100% 100%;background-repeat:no-repeat}
@@ -332,9 +331,6 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 }
 .hero .meta>div{min-width:0;padding:4px 6px}
 .hero .meta strong{font-size:14px;line-height:1.35}
-.topnav{scrollbar-width:thin}
-.topnav::-webkit-scrollbar{display:block;height:5px}
-.topnav::-webkit-scrollbar-thumb{background:#713044;border-radius:4px}
 .grid2,.grid3,.dash-bottom{min-width:0}
 .grid2>*,.grid3>*,.dash-bottom>*{min-width:0}
 @container akaoni-workspace (max-width:510px){
@@ -354,20 +350,49 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   .side{justify-self:start}
   .right{justify-self:end}
 }
-@media(max-width:620px){
-  .top{flex-wrap:wrap;padding:7px 9px;gap:5px}
-  .brand{flex:1;min-width:0}
-  .topnav{order:1;flex:0 0 100%}
-  .topnav button{padding:9px 7px}
-  .brand-lettering small{letter-spacing:.8px}
-  .portrait-hint{left:5px;bottom:5px;padding:5px}
+/* The title and shortcuts occupy one row, with navigation below. */
+header.top{
+  display:block;height:auto;min-height:0;padding:0;
+  background:linear-gradient(180deg,#180e17,#0d0910);
 }
+.top-identity,.top-navigation{
+  display:flex;align-items:center;gap:10px 16px;padding:9px clamp(10px,2vw,24px);
+}
+.top-identity{flex-wrap:wrap;border-bottom:1px solid #653247}
+.top .brand{
+  flex:1 1 auto;width:auto;min-width:0;white-space:normal;
+  font-size:clamp(20px,2.4vw,24px);line-height:1.18;
+}
+.top .brand-sigil{flex:none;font-size:30px}
+.top .brand-lettering{min-width:0;overflow-wrap:anywhere}
+.top .brand-lettering small{font-size:11px;letter-spacing:1px;margin-top:3px;color:#eba5b6}
+.top-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.top-action,.top .sidebar-toggle{min-height:36px;font-size:14px}
+.top-action{flex:none;padding:6px 10px;white-space:nowrap}
+.top .sidebar-toggle{width:37px;flex:0 0 37px}
+.top-navigation{padding-block:6px;flex-wrap:wrap}
+.top .topnav{order:0;flex:1 1 505px;flex-wrap:wrap;gap:4px 6px;overflow:visible}
+.top .topnav button{
+  padding:7px 9px;border-radius:5px;font-size:15px;line-height:1.2;
+}
+.top .topnav button.active{background:#4c172b}
+.top .nav-select{width:auto;min-width:0;max-width:100%;height:35px;font-size:15px}
+.top .search{
+  display:block;flex:1 1 170px;min-width:0;max-width:320px;height:35px;font-size:14px;
+}
+@media(max-width:880px){.top .search{display:none}}
+@media(max-width:520px){
+  .top .brand{flex:1 0 100%}
+  .top-identity,.top-navigation{gap:6px;padding-inline:10px}
+  .top .topnav button{padding:7px 6px}
+}
+@media(max-width:620px){.portrait-hint{left:5px;bottom:5px;padding:5px}}
 /* Dice results and Letum shortcuts */
-.top-action{flex:none;white-space:nowrap;padding:7px 9px;font-size:12px}
 #appShell[inert] .session-result{display:none}
 .session-result{
-  position:fixed;top:72px;right:14px;z-index:8;width:min(355px,calc(100% - 28px));
-  max-height:65vh;overflow:auto;padding:15px 40px 15px 16px;
+  position:absolute;grid-row:2/3;grid-column:1/-1;top:10px;right:14px;z-index:8;
+  width:min(355px,calc(100% - 28px));max-height:calc(100% - 20px);
+  overflow:auto;padding:15px 40px 15px 16px;
   border:1px solid #b96583;border-left:4px solid #ec789a;border-radius:9px;
   background:#1c111e;box-shadow:0 10px 32px #000c;overflow-wrap:anywhere;
 }
@@ -400,14 +425,6 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
 .latent-actions small{color:#f2c7d7}
 .latent-foot{margin-top:9px}
 @container akaoni-workspace (max-width:410px){.latent-actions{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:760px){.session-result{top:122px;max-height:calc(100% - 140px)}}
-@media(max-width:440px){
-  .top .brand{min-width:0;flex:0 0 100%}
-  .top-action{padding:6px 7px}
-  .session-result{top:152px;max-height:calc(100% - 168px)}
-}
-@media(max-height:360px){.session-result{top:auto;bottom:9px;max-height:55vh}}
-
 /* v0.9.0 · independent profile manager and generic sheet */
 .character-hub{
   position:fixed;inset:0;z-index:8;overflow:auto;overscroll-behavior:contain;
@@ -444,10 +461,31 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   </label>
   <p class="note">Aggiungi i privilegi di classe nelle note.</p>
   <div class="inline"><button type="button" onclick="closeGenericLevel()">Annulla</button><button class="primary">Conferma livello</button></div>
-</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.6</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><button class="top-action" type="button" onclick="openCharacterHub()" aria-label="Personaggi" title="Personaggi">☷</button>
-<button class="top-action" type="button" onclick="tab('dadi')">Dadi</button>
-<button class="top-action primary" type="button" onclick="roll('1d20',0,'d20 rapido')" aria-label="Lancia un d20" title="Lancia un d20">d20</button>
-<input id="import" type="file" accept=".json" hidden onchange="importData(event)"></header><aside class="side" id="leftSidebar">
+</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top">
+  <div class="top-identity">
+    <div class="brand"><span class="brand-sigil" aria-hidden="true">✥</span><div class="brand-lettering">D&amp;D Character Manager<small>AKAONI COMPENDIUM · v0.9.7</small></div></div>
+    <div class="top-actions" role="group" aria-label="Comandi rapidi">
+      <button class="top-action" type="button" onclick="openCharacterHub()">Personaggi</button>
+      <button class="top-action" type="button" onclick="tab('dadi')">Dadi</button>
+      <button class="top-action primary" type="button" onclick="roll('1d20',0,'d20 rapido')" aria-label="Lancia un d20" title="Lancia un d20">d20</button>
+      <button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button>
+      <button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button>
+    </div>
+  </div>
+  <div class="top-navigation">
+    <nav class="topnav" aria-label="Navigazione principale">
+      <button type="button" data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button>
+      <button type="button" data-target="compendio" onclick="tab('compendio')">▣ Compendio</button>
+      <button type="button" data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button>
+      <button type="button" data-target="diario" onclick="tab('diario')">✎ Diario</button>
+      <select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)">
+        <option value="">Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option>
+      </select>
+    </nav>
+    <input class="search" type="search" placeholder="Cerca nel compendio" aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')">
+  </div>
+  <input id="import" type="file" accept=".json" hidden onchange="importData(event)">
+</header><aside class="side" id="leftSidebar">
 <h3>✥ Personaggio</h3><button class="primary" onclick="openCharacterHub()">☷ I miei personaggi</button><div class="char-chip"><span class="char-mini-art" role="button" tabindex="0" aria-label="Apri la galleria di Akaoni" onclick="openPortraitGallery()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPortraitGallery()}" title="Apri ritratti"></span><div class="char-mini-copy"><b>Akaoni Jorugumo</b><br><span class="muted" id="sideLevel">Liv. 7 · Ladro 4 / Blood Hunter 3</span></div></div>
 <button class="primary side-primary" onclick="openLevel()">✦ Sali di livello</button>
 <details class="sidebar-group"><summary>⚔ Strumenti di sessione</summary><div class="sidebar-group-items"><button onclick="tab('combattimento')">Combattimento e riposi</button><button onclick="tab('poteri')">Poteri di Letum</button><button onclick="tab('mutageni')">Gestione mutageni</button><button onclick="tab('dadi')">Lancia dadi</button></div></details>
