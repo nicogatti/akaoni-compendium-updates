@@ -444,7 +444,7 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   </label>
   <p class="note">Aggiungi i privilegi di classe nelle note.</p>
   <div class="inline"><button type="button" onclick="closeGenericLevel()">Annulla</button><button class="primary">Conferma livello</button></div>
-</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.5</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><button class="top-action" type="button" onclick="openCharacterHub()" aria-label="Personaggi" title="Personaggi">☷</button>
+</form></div><div class="panel"><h3>⚔ Equipaggiamento e note</h3><textarea id="genericNotes" rows="7" placeholder="Inventario, competenze, privilegi, incantesimi e note" oninput="updateGenericNotes(this.value)"></textarea><p class="note">Questa è una scheda generica di base. Per il momento i privilegi di classe, gli incantesimi e il multiclasse richiedono gestione manuale.</p></div></div></div></div><div class="app" id="appShell"><header class="top"><div class="brand"><span class="brand-sigil">✥</span><div class="brand-lettering">D&D Character Manager<small>AKAONI COMPENDIUM · v0.9.6</small></div></div><button id="toggleLeftSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('left')" title="Comprimi o espandi barra dei personaggi" aria-label="Comprimi barra dei personaggi" aria-pressed="false">☰</button><nav class="topnav" aria-label="Navigazione principale"><button data-target="scheda" class="active" onclick="tab('scheda')">♟ Scheda</button><button data-target="compendio" onclick="tab('compendio')">▣ Compendio</button><button data-target="inventario" onclick="tab('inventario')">⚔ Inventario</button><button data-target="diario" onclick="tab('diario')">✎ Diario</button><select id="extraNav" class="nav-select" aria-label="Altre sezioni" onchange="if(this.value)tab(this.value)"><option value="">✦ Altro…</option><option value="combattimento">Combattimento</option><option value="poteri">Poteri di Letum</option><option value="mutageni">Mutageni</option><option value="dadi">Lancio dei dadi</option><option value="homebrew">Homebrew</option></select></nav><input class="search" placeholder="Incantesimi, classi, oggetti..." aria-label="Cerca nel compendio" oninput="searchComp(this.value);tab('compendio')"><button id="toggleRightSidebar" class="sidebar-toggle" type="button" onclick="toggleSidebar('right')" title="Comprimi o espandi barra equipaggiamento" aria-label="Comprimi barra equipaggiamento" aria-pressed="false">◧</button><button class="top-action" type="button" onclick="openCharacterHub()" aria-label="Personaggi" title="Personaggi">☷</button>
 <button class="top-action" type="button" onclick="tab('dadi')">Dadi</button>
 <button class="top-action primary" type="button" onclick="roll('1d20',0,'d20 rapido')" aria-label="Lancia un d20" title="Lancia un d20">d20</button>
 <input id="import" type="file" accept=".json" hidden onchange="importData(event)"></header><aside class="side" id="leftSidebar">
@@ -518,7 +518,7 @@ body{font-family:Georgia,"Times New Roman",serif;background:#060407;color:#f7e7e
   </div>
   <div id="targetSave" class="target-save" hidden>
     <p id="targetSavePrompt"></p>
-    <div class="inline">
+    <div class="inline" role="group" aria-labelledby="targetSavePrompt">
       <button id="saveFailed" type="button" aria-pressed="false" onclick="selectTargetSave(false)">TS fallito</button>
       <button id="savePassed" type="button" aria-pressed="false" onclick="selectTargetSave(true)">TS superato</button>
     </div>
@@ -773,14 +773,10 @@ function showSessionResult(message, result){
   document.getElementById("targetSave").hidden = !activeTargetSave;
   document.getElementById("targetSaveOutcome").textContent = "";
   if (activeTargetSave) {
-    const {ability,fullDamage,successDamage} = activeTargetSave;
-    document.getElementById("targetSavePrompt").textContent = (ability ? "TS " + ability + " · " : "") +
-      "Scegli l’esito comunicato dal Master per il bersaglio.";
-    for (const [id,label,damage] of [["saveFailed","TS fallito",fullDamage],["savePassed","TS superato",successDamage]]) {
-      const button = document.getElementById(id);
-      button.textContent = label + " · " + damage;
-      button.setAttribute("aria-pressed", "false");
-    }
+    const {ability} = activeTargetSave;
+    document.getElementById("targetSavePrompt").textContent = ability ? "TS " + ability + " del bersaglio" : "Tiro salvezza del bersaglio";
+    document.getElementById("saveFailed").setAttribute("aria-pressed", "false");
+    document.getElementById("savePassed").setAttribute("aria-pressed", "false");
   }
 }
 function renderRollHistory(){
@@ -1112,11 +1108,10 @@ function rollSaveDamage(name,ability,success,terms,bonus=0,note=""){
   const total = Math.max(0,baseTotal);
   const successDamage = success === "half" ? Math.floor(total / 2) : 0;
   const detail = rolled.map(({count,sides,values}) => count + "d" + sides + ": " + values.join(", ")).join(" · ") +
-    (bonus ? " · Modificatore " + sign(bonus) : "") +
-    " · TS " + (ability ? ability + " " : "") + "fallito: " + total +
-    " · TS superato: " + successDamage + " danni" + (note ? " · " + note : "");
+    (bonus ? " · Modificatore " + sign(bonus) : "");
   const targetSave = {ability,fullDamage:total,successDamage};
-  record(name + ": " + detail, {label:name + " · Danni",total,detail,targetSave});
+  const message = name + ": " + total + " danni tirati · " + detail + (note ? " · " + note : "");
+  record(message, {label:name + " · Danni",total,detail,targetSave});
 }
 function spellSavePanel(spell,name){
   if (spell.index === "faerie-fire") {
