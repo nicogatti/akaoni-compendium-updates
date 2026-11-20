@@ -14,7 +14,7 @@ Apri **I tuoi personaggi**. Scegli una scheda salvata, **Crea personaggio** per 
 
 ## Aggiornare
 
-Dalla versione 0.4.0 premi **Controlla aggiornamenti** nella schermata **I tuoi personaggi**. Se usi una versione precedente, installa una volta il file per il tuo computer.
+Con la versione 0.4.0 apri **I tuoi personaggi**, premi **Controlla aggiornamenti** in fondo alla schermata e conferma. Dalla 0.4.1 trovi il pulsante in alto, anche dentro le schede. Se usi la 0.3.1 o una versione precedente, installa una volta il file per il tuo computer.
 
 ## Per il Master
 
