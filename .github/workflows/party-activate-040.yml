@@ -1,0 +1,59 @@
+name: Attiva e verifica il canale pubblico del Party
+on:
+  push:
+    branches: [party-publish-040]
+    paths: ['.github/workflows/party-activate-040.yml']
+permissions:
+  contents: write
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Prepara la pubblicazione atomica
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/channel"
+          cp party/README.md "$RUNNER_TEMP/channel/"
+          cat update-segment-* > "$RUNNER_TEMP/update.zip"
+          cd "$RUNNER_TEMP"
+          echo '51ba2cc56e1ba1ebcfa55b59b774d19ee9ab216ea5985a8f923961a4a87f5cf0  update.zip' | sha256sum -c
+          unzip -q update.zip -d channel
+          cd channel
+          test "$(jq -r .version manifest.json)" = '0.4.0'
+          sha="$(jq -r .sha256 manifest.json)"
+          test "$sha" = '85bc23d50e6d0ee0aa9665c0601c7c9bb7532417ca4b13eb2822844513a88915'
+          echo "$sha  $sha.json" | sha256sum -c
+          cd "$GITHUB_WORKSPACE"
+          git fetch origin main
+          git switch --detach FETCH_HEAD
+          mkdir -p party
+          cp "$RUNNER_TEMP/channel/"* party/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add party
+          if ! git diff --cached --quiet; then
+            git commit -m 'Attiva download e aggiornamenti pubblici del Party 0.4.0'
+            git push origin HEAD:main
+          fi
+      - name: Prova i download senza account
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          mkdir public-check
+          cd public-check
+          base="https://github.com/$GITHUB_REPOSITORY/releases/download/party-v0.4.0"
+          for name in Compendio-del-Party-Mac.dmg Compendio-del-Party-Windows.exe Compendio-del-Party-Linux.AppImage SHA256SUMS.txt; do
+            curl -fsSL --retry 4 "$base/$name" -o "$name"
+          done
+          sha256sum -c SHA256SUMS.txt
+          channel="https://raw.githubusercontent.com/$GITHUB_REPOSITORY/main/party"
+          for attempt in {1..10}; do
+            if curl -fsSL "$channel/manifest.json?check=$GITHUB_RUN_ID-$attempt" -o manifest.json; then break; fi
+            sleep 3
+          done
+          sha="$(jq -r .sha256 manifest.json)"
+          test "$sha" = '85bc23d50e6d0ee0aa9665c0601c7c9bb7532417ca4b13eb2822844513a88915'
+          curl -fsSL --retry 4 "$channel/$sha.json" -o update.json
+          echo "$sha  update.json" | sha256sum -c
+          curl -fsSL "https://github.com/$GITHUB_REPOSITORY/tree/main/party" -o /dev/null
