@@ -1,0 +1,81 @@
+name: Pubblica Compendio del Party 0.4.0
+on:
+  push:
+    branches: [party-publish-040]
+    paths: ['.github/workflows/party-publish-040.yml']
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: party-v0.4.0
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Ricevi i quattro pacchetti verificati
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          umask 077
+          openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:3072 -out party-key.pem 2>/dev/null
+          openssl pkey -in party-key.pem -pubout -out party-public.pem
+          gh api -X PUT "repos/$GH_REPO/contents/party-public.pem" -f branch=party-publish-040 -f message="Chiave temporanea di trasferimento" -f content="$(base64 -w0 party-public.pem)" >/dev/null
+          for i in {1..100}; do
+            if gh api -H 'Accept: application/vnd.github.raw+json' "repos/$GH_REPO/contents/party-envelope.json?ref=party-publish-040" > envelope.json 2>/dev/null; then break; fi
+            sleep 8
+          done
+          python - <<'PY'
+          import base64, hashlib, json, pathlib, shutil, subprocess, urllib.request, zipfile
+          expected = {
+            'mac':('a689ee4ae4d29beec5f9b01320ff391f6f143178c27f389f8a892e87a0aa6676','.dmg','Compendio-del-Party-Mac.dmg'),
+            'windows':('7981018e60a9f35450df845025132c299bcce368b7d81d34a95abc68da3fe581','.exe','Compendio-del-Party-Windows.exe'),
+            'linux':('98b0d218a69b567c65c4c06f0d1c1437371d34a4ab80d55d8e3e73f1429b3e6e','.AppImage','Compendio-del-Party-Linux.AppImage'),
+            'update':('51ba2cc56e1ba1ebcfa55b59b774d19ee9ab216ea5985a8f923961a4a87f5cf0','','')}
+          envelope=json.loads(pathlib.Path('envelope.json').read_text())
+          pathlib.Path('release').mkdir()
+          for key,(digest,extension,output) in expected.items():
+              plain=b''.join(subprocess.run(['openssl','pkeyutl','-decrypt','-inkey','party-key.pem','-pkeyopt','rsa_padding_mode:oaep','-pkeyopt','rsa_oaep_md:sha256'],input=base64.b64decode(chunk),capture_output=True,check=True).stdout for chunk in envelope[key])
+              url=plain.decode()
+              if not url.startswith('https://'): raise RuntimeError('Protocollo inatteso')
+              archive=pathlib.Path(key+'.zip')
+              with urllib.request.urlopen(url,timeout=120) as src, archive.open('wb') as dst: shutil.copyfileobj(src,dst)
+              assert hashlib.sha256(archive.read_bytes()).hexdigest()==digest,key
+              with zipfile.ZipFile(archive) as z:
+                  if key=='update':
+                      manifest=json.loads(z.read('manifest.json'))
+                      assert manifest['version']=='0.4.0'
+                      sha=manifest['sha256']
+                      assert len(sha)==64 and all(c in '0123456789abcdef' for c in sha)
+                      payload=z.read(sha+'.json')
+                      assert hashlib.sha256(payload).hexdigest()==sha and json.loads(payload)['version']=='0.4.0'
+                      target=pathlib.Path('update')
+                      target.mkdir()
+                      (target/(sha+'.json')).write_bytes(payload)
+                      (target/'manifest.json').write_bytes(z.read('manifest.json'))
+                  else:
+                      names=[name for name in z.namelist() if name.endswith(extension)]
+                      assert len(names)==1,(key,names)
+                      pathlib.Path('release',output).write_bytes(z.read(names[0]))
+          PY
+      - name: Pubblica download e canale degli aggiornamenti
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/release"
+          sha256sum Compendio-* > SHA256SUMS.txt
+          gh release create "$TAG" Compendio-* SHA256SUMS.txt --repo "$GH_REPO" --target main --title "Compendio del Party 0.4.0" --notes "Scarica il file per il tuo computer. Apri I tuoi personaggi per iniziare." --latest=false
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p party
+          cp "$RUNNER_TEMP/update/"*.json party/
+          git show "$GITHUB_SHA:party/README.md" > party/README.md
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add party
+          git commit -m 'Pubblica Compendio del Party 0.4.0 e il canale aggiornamenti'
+          git push origin HEAD:main
